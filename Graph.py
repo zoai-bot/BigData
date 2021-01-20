@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import xlsxwriter
+
 
 # eco_file =  "D:\SYun\BigData\Corona\ECOS_TABLE_20210118_154159.xlsx"
 # corona_file = "D:/SYun/BigData/Corona/101_DT_COVID19_005_D_20210118235058.xlsx"
@@ -56,6 +56,3 @@ plt.xlim()
 plt.subplots_adjust(wspace=0.5)
 
 plt.show()
-
-
-
