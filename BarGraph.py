@@ -36,23 +36,43 @@ df = pd.read_excel("D:\SYun\BigData\Corona\kospi_corona.xlsx", engine='openpyxl'
 d = df.dropna()
 
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 
-Date_list = df.index.tolist()
+Date_list = df['Date'].tolist()
 X_pos = np.arange(len(Date_list))
 Coronic_Value = df['Coronic'].tolist()
 Kospi_Value = df['Kospi'].tolist()
 
-plt.figure(figsize=(12, 3))
-plt_Corona = plt.subplot(1,2,1)
-plt_Corona.bar(X_pos, Coronic_Value, align='center')
-plt.ylabel('coronic')
-plt.title('coronic data')
-plt_Kospi = plt.subplot(1,2,2)
-plt_Kospi.bar(X_pos, Kospi_Value, align='center')
-plt.xlim()
+plt.figure(figsize=(13, 9))
+
+plt_Corona = plt.subplot(2,2,1)
+plt_Corona.bar(Date_list, Coronic_Value, align='center', color='r')
+plt_Corona.tick_params(axis='x', rotation=90)
+plt_Corona.set_title('coronic')
+plt_Corona.set_ylabel('coronic data')
+plt_Corona.xaxis.set_major_locator(ticker.AutoLocator())
+
+plt_Kospi = plt.subplot(2,2,2)
+plt_Kospi.tick_params(axis='x', rotation=90)
+plt_Kospi.bar(Date_list, Kospi_Value, align='center', color='b')
+plt_Kospi.set_title('Kospi')
+plt_Kospi.set_ylabel('Kospi value')
+plt_Kospi.set_ylim(1500,3500)
+plt_Kospi.xaxis.set_major_locator(ticker.AutoLocator())
+# plt_Kospi.set_xticklabels(Date_list, rotation=90)
 
 
 
-plt.subplots_adjust(wspace=0.5)
+plt_df1 = plt.subplot(2,2,3)
+plt_df1.tick_params(axis='x', rotation=90)
+plt_df2 = plt_df1.twinx()
+plt_df1.bar(Date_list, Coronic_Value, align='center', color='r', label='coronic')
+plt_df2.bar(Date_list, Kospi_Value, align='center', color='b', label='kospi')
+plt_df2.set_ylim(1500,3500)
+plt_df1.legend(loc='upper left')
+plt_df2.legend(loc='upper right')
+plt_df1.xaxis.set_major_locator(ticker.AutoLocator())
 
+plt.subplots_adjust(wspace=0.5, hspace=0.5)
 plt.show()
+
