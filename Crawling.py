@@ -1,7 +1,8 @@
 from selenium import webdriver
 import time
+import timeit
 
-driver = webdriver.Chrome("c:/chromedriver.exe")
+driver = webdriver.Chrome("c:/chromedriver_win32/chromedriver.exe")
 driver.get('https://www.instagram.com')
 time.sleep(2)
 
@@ -17,7 +18,7 @@ def login(id, password):
     input_pw.send_keys(password)
     input_pw.submit()
     time.sleep(5)
-login('black0401@gmail.com','zy9241zy')
+login('','')
 
 def insta_searching(word):
     url = 'https://www.instagram.com/explore/tags/' + word
@@ -68,6 +69,7 @@ def get_content(driver):
     return data
 get_content(driver)
 
+
 def move_next(driver):
     right = driver.find_element_by_css_selector ('a.coreSpriteRightPaginationArrow')
     right.click()
@@ -75,8 +77,9 @@ def move_next(driver):
 move_next(driver)
 
 results = []
-crawling_pages = 100
+crawling_pages = 1000
 error_num = 0
+start = timeit.default_timer()
 for i in range(crawling_pages):
     # 게시글 수집에 오류 발생시(네트워크 문제 등의 이유로)  2초 대기 후, 다음 게시글로 넘어가도록 try, except 구문 활용
     try:
@@ -87,14 +90,17 @@ for i in range(crawling_pages):
     except:
         error_num = error_num + 1
         print('error: %d' % error_num)
-        time.sleep(2)
+        time.sleep(5)
         move_next(driver)
 
 import pandas as pd
 
 results_df = pd.DataFrame(results)
 results_df.columns = ['content','data','like','place','tags']
-results_df.to_excel('./files/1_crawling_Corona.xlsx')
+results_df.to_excel('C:/Users/zoai0/OneDrive/Documents/빅데이터/Corona/crawling_Corona.xlsx', engine='openpyxl')
+end = timeit.default_timer()
+print("end time: ", end)
+print("time took: ", end - start)
 
 
 
