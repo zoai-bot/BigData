@@ -52,7 +52,8 @@ plt.figure(figsize=(15,8))
 # plt.show()
 tag_common = tag_counts.most_common(10)
 
-print(tag_common)
+print(tag_common[0][0])
+print(tag_common[0][1])
 
 
 
