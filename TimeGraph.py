@@ -2,9 +2,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import numpy as np
+import os
 
+path = os.getcwd()
 
-df = pd.read_excel("D:\SYun\BigData\Corona\kospi_corona.xlsx", engine='openpyxl')
+df = pd.read_excel(path+"\kospi_corona.xlsx", engine='openpyxl')
 df = df.dropna()
 
 x_pos = np.arange(len(df['Date']))

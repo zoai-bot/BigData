@@ -1,8 +1,11 @@
 from selenium import webdriver
 import time
 import timeit
+import os
 
-driver = webdriver.Chrome("c:/chromedriver_win32/chromedriver.exe")
+path = os.getcwd()
+
+driver = webdriver.Chrome(path+"\chromedriver.exe")
 driver.get('https://www.instagram.com')
 time.sleep(2)
 
@@ -28,7 +31,7 @@ insta_searching(word)
 time.sleep(5)
 
 def select_first(driver):
-    first = driver.find_elements_by_css_selector('div._9AhH0')[0] #첫개시물
+    first = driver.find_elements_by_css_selector('div._9AhH0')[0]
     first.click()
 select_first(driver)
 time.sleep(3)
@@ -38,33 +41,33 @@ from bs4 import BeautifulSoup
 import unicodedata
 
 def get_content(driver):
-    # ① 현재 페이지 html 정보 가져오기
+
     html = driver.page_source
     soup = BeautifulSoup(html, 'lxml')
-    # ② 본문 내용 가져오기
+
     try:
         content = soup.select('div.C4VMK > span')[0].text #내용
         content = unicodedata.normalize('NFC', content)
     except:
         content = ' '
-    # ③ 본문 내용에서 해시태그 가져오기(정규식 활용)
+
     tags = re.findall(r'#[^\s#,\\d]+', content)
-    # ④ 작성일자 정보 가져오기
+
     date = soup.select('time._1o9PC.Nzb55')[0]['datetime'][:10]
-    # ⑤ 좋아요 수 가져오기
+
     try:
         like = soup.select_one('article > div.eo2As > section.EDfFK.ygqzn > div > div > button').text
     except:
         like = soup.select_one(
             'article > div.eo2As > section.EDfFK.ygqzn > div > span').text
-    # ⑥ 위치정보 가져오기
+
     try:
         place = soup.select(
             'body > div._2dDPU.CkGkG > div.zZYga > div > article > header > div.o-MQd > div.M30cS > div.JF9hh > a')[0].text
         place = unicodedata.normalize('NFC', place)
     except:
         place = ''
-    # ⑦ 수집한 정보 저장하기
+
     data = [content, date, like, place, tags]
     return data
 get_content(driver)
@@ -77,13 +80,13 @@ def move_next(driver):
 move_next(driver)
 
 results = []
-crawling_pages = 1000
+crawling_pages = 10
 error_num = 0
 start = timeit.default_timer()
 for i in range(crawling_pages):
-    # 게시글 수집에 오류 발생시(네트워크 문제 등의 이유로)  2초 대기 후, 다음 게시글로 넘어가도록 try, except 구문 활용
+
     try:
-        data = get_content(driver)    # 게시글 정보 가져오기
+        data = get_content(driver)
         results.append(data)
         move_next(driver)
         print(i)
@@ -97,7 +100,7 @@ import pandas as pd
 
 results_df = pd.DataFrame(results)
 results_df.columns = ['content','data','like','place','tags']
-results_df.to_excel('C:/Users/zoai0/OneDrive/Documents/빅데이터/Corona/crawling_Corona.xlsx', engine='openpyxl')
+results_df.to_excel(path+'\crawling_Corona2.xlsx', engine='openpyxl')
 end = timeit.default_timer()
 print("end time: ", end)
 print("time took: ", end - start)

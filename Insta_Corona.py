@@ -30,11 +30,16 @@ tag_counts = Counter(tag_selection)
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 import platform
+from matplotlib import font_manager, rc
+import sys
 
 if platform.system() == 'Windows':
     font_path = "c:/Windows/Fonts/gulim.ttc"
 elif platform.system() == "Darwin":   #Mac 의 경우
-    font_path = "/Users/$USER/Library/Fonts/AppleGothic.ttf"
+    font_path = "c:/Users/$USER/Library/Fonts/AppleGothic.ttf"
+
+font_name = font_manager.FontProperties(fname=font_path).get_name()
+rc('font',family=font_name)
 
 wordcloud = WordCloud(font_path= font_path,
                     background_color="white",
@@ -45,15 +50,28 @@ wordcloud = WordCloud(font_path= font_path,
 wordcloud.generate_from_frequencies(tag_counts)
 plt.figure(figsize=(15,8))
 
-# plt_word = plt.subplot(1,2,1)
-# plt_word.imshow(wordcloud)
-# plt_word.axis('off')
-# plt.savefig(path+"\hashtag_wordcloud")
-# plt.show()
+plt_word = plt.subplot(1,2,1)
+plt_word.imshow(wordcloud)
+plt_word.axis('off')
+plt.savefig(path+"\hashtag_wordcloud")
+plt.show()
+
 tag_common = tag_counts.most_common(10)
 
-print(tag_common[0][0])
-print(tag_common[0][1])
+pie_label = []
+pie_value = []
+for i in range(10):
+    pie_label.append(tag_common[i][0])
+for i in range(10):
+    pie_value.append(tag_common[i][1])
+explode = (0,0,0,0,0,0,0,0,0,0)
+
+plt_pie = plt.subplot(1,2,2)
+plt_pie.pie(pie_value, explode=explode, labels=pie_label, autopct="%.0f%%", shadow=True)
+# plt_pie.setp(plt_pie, fontproperties=fontprop)
+plt_pie.set_title("코로나 해쉬태그(#) 순위 10 비율")
+plt.show()
+
 
 
 
