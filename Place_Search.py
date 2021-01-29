@@ -3,12 +3,13 @@ import pandas as pd
 
 path = os.getcwd()
 excel_locations = pd.read_excel(path + "\crawling_Corona.xlsx", engine='openpyxl')
-
+print(excel_locations.head())
 location_count = pd.DataFrame(excel_locations['place'].value_counts())
+location_count.columns = ['place count']
 location_count.to_excel(path+"\location_count.xlsx", engine='openpyxl')
 locations = list(location_count.index)
 
-
+'''
 import requests
 
 searching = 'Seoul'
@@ -55,4 +56,4 @@ for location in locations:
 locations_inform_df = pd.DataFrame(locations_inform)
 locations_inform_df.columns = ['장소','경도','위도','인스타위치명']
 locations_inform_df.to_excel(path + '/locations.xlsx', index=False, engine='openpyxl')
-
+'''
