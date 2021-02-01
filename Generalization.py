@@ -1,7 +1,10 @@
 import re
 
 global string
-string = '가나다 가나다라마 바사아자차 가나 abc abcde fghigk zzz <입력값>'
+string = '가나다 가나다라마 바사아자차 가나 abc abcde fghigk zzz 사랑합니다 길가의 <입력값>'
+string_list = string.split(" ")
+print("기본문장: " + string)
+print("---------------"*5)
 
 def finda(generalization):
     result = generalization.findall(string)
@@ -25,8 +28,12 @@ def substitute(generalizaion):
     result = generalizaion.sub('',string)
     print(result)
 
-#가나다 문자를 ''로 전환
+#가,나,다 한 문자들을 ''로 전환
 gener = re.compile('[가나다]')
+substitute(gener)
+
+
+gener = re.compile('\s+?의')
 substitute(gener)
 
 

@@ -9,19 +9,37 @@ path = os.getcwd()
 df = pd.read_excel(path + "\crawling_Corona.xlsx", engine="openpyxl")
 
 content_text = "".join(df['content'].tolist())
-# print(content_text)
-# print("-----"*10)
-#
-# list = "꾀꼬리가 하나가 가는길을 막는다 나머진 모른다"
-# nouns = Okt().nouns(content_text)
-# # count = Counter(nouns)
-# print(nouns)
+
+korean_stopwords = path + "\korean_stopwords.txt"
+with open(korean_stopwords, encoding='utf8') as file:
+    stopwords = file.readlines()
+stopwords = [x.strip() for x in stopwords]
 
 def clean_text(content):
-    text = re.compile('[a-zA-Zㄱ-ㅎㄱ-힣#]+')
-    return text.findall(content)
+    gen_spword = re.compile(r'[#]+|www+|com')
+    sub_content = gen_spword.sub(" ", content)
+    gen_word = re.compile(r'[a-zA-Z가-힣#]+')
+    text = gen_word.findall(sub_content)
+    # combine_text = ' '.join(text)
 
-a = clean_text(content_text)
-print(content_text)
-print(a)
+    nouns = [noun for noun in text if noun not in stopwords]
+
+    return nouns
+
+print("-----"*10)
+
+clean_text = clean_text(content_text)
+print(clean_text)
+
+
+
+
+# nouns = []
+# nouns_tagger = Okt()
+# nouns = nouns_tagger.nouns(sample)
+# count = Counter(nouns)
+
+
+
+
 
