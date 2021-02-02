@@ -3,6 +3,8 @@ import os
 from konlpy.tag import Okt
 from collections import Counter
 import re
+import nltk
+from nltk.corpus import stopwords
 
 path = os.getcwd()
 
