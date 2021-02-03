@@ -3,43 +3,40 @@ import os
 from konlpy.tag import Okt
 from collections import Counter
 import re
-import nltk
-from nltk.corpus import stopwords
 
 path = os.getcwd()
 
 df = pd.read_excel(path + "\crawling_Corona.xlsx", engine="openpyxl")
 
-content_text = "".join(df['content'].tolist())
-
 korean_stopwords = path + "\korean_stopwords.txt"
+
+'''
 with open(korean_stopwords, encoding='utf8') as file:
     stopwords = file.readlines()
-stopwords = [x.strip() for x in stopwords]
+    stopwords = [x.strip() for x in stopwords]
+    file.close()
 
-def clean_text(content):
-    gen_spword = re.compile(r'[#]+|www+|com')
-    sub_content = gen_spword.sub(" ", content)
-    gen_word = re.compile(r'[a-zA-Z가-힣#]+')
-    text = gen_word.findall(sub_content)
-    # combine_text = ' '.join(text)
+with open(path + "\korean_stopwords2.txt", mode='w') as file:
+    file.write(', '.join(stopwords))
+    file.close()
+'''
 
-    nouns = [noun for noun in text if noun not in stopwords]
+with open(path + "\korean_stopwords2.txt", mode='r') as file:
+    kor_stopwords = file.readline().split(', ')
 
-    return nouns
+def filter_kor(content):
+    korean = re.compile(r'[^ㄱ-ㅎ가-힣]')
+    sub_content = korean.sub(" ", content)
+    nouns = Okt().nouns(sub_content)
 
-print("-----"*10)
+    noun = [noun for noun in nouns if noun not in kor_stopwords]
 
-clean_text = clean_text(content_text)
-print(clean_text)
-
+    return noun
 
 
+df['kor_nouns'] = df['content'].apply(lambda x: filter_kor(x))
 
-# nouns = []
-# nouns_tagger = Okt()
-# nouns = nouns_tagger.nouns(sample)
-# count = Counter(nouns)
+df.to_excel(path + "\clean_data.xlsx", engine="openpyxl")
 
 
 

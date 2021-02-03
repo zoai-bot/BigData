@@ -13,12 +13,19 @@ path = os.getcwd()
 df = pd.read_excel(path + "\crawling_Corona.xlsx", engine="openpyxl")
 content_text = ''.join(df['content'].tolist())
 
+print(df['content'])
 
-with open(path + "\eng_stopwords.txt", 'w') as file:
-    eng_stopwords = stopwords.words('english')
-    file.write(",".join(eng_stopwords))
-file.close()
+# add_stopwords = ", ootd, http, co, kr, dm, fallow, fallowforfollow, instalike, www, https, xl, selfie, followforfollowback, com, lol, instagood, facebook, "
 
+# with open(path + "\eng_stopwords.txt", 'a+') as file:
+#     eng_stopwords = ', '.join(stopwords.words('english'))
+#     file.write(eng_stopwords)
+#     file.write(add_stopwords)
+#     file.close()
+
+with open(path+ "\eng_stopwords.txt", "rt") as file:
+    eng_stopwords = file.readline().split(', ')
+    file.close()
 
 def filter_eng(content):
     words = []
@@ -33,21 +40,12 @@ def filter_eng(content):
 
     nouns = [noun for noun, pos in tokens_pos if pos in stop_taggs]
     words = [words for words in nouns if len(words) > 1]
+    no_stopwords = [word for word in words if word not in eng_stopwords]
 
-    eng_stopwords = path + "\eng_stopwords.txt"
-    # with open(korean_stopwords, encoding='utf8') as file:
-    #     stopwords = file.readlines()
-    # stopwords = [x.strip() for x in stopwords]
-    print(nouns)
-
-
-    # eng_stopwords = set(stopwords.words('english'))
-    # no_stopwords = [word for word in eng_list if not word in eng_stopwords]
-
-    pass
+    return no_stopwords
 
 
 # word_tokens = nltk.word_tokenize(content_text)
 
 
-aa = filter_eng(content_text)
+# aa = filter_eng(content_text)
