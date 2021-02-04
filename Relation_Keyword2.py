@@ -17,11 +17,12 @@ print(df['content'])
 
 # add_stopwords = ", ootd, http, co, kr, dm, fallow, fallowforfollow, instalike, www, https, xl, selfie, followforfollowback, com, lol, instagood, facebook, "
 
-# with open(path + "\eng_stopwords.txt", 'a+') as file:
+# with open(path + "\eng_stopwords.txt", 'wt') as file:
 #     eng_stopwords = ', '.join(stopwords.words('english'))
 #     file.write(eng_stopwords)
 #     file.write(add_stopwords)
 #     file.close()
+
 
 with open(path+ "\eng_stopwords.txt", "rt") as file:
     eng_stopwords = file.readline().split(', ')

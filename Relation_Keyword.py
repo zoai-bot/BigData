@@ -4,6 +4,7 @@ from konlpy.tag import Okt
 from collections import Counter
 import re
 
+
 path = os.getcwd()
 
 df = pd.read_excel(path + "\crawling_Corona.xlsx", engine="openpyxl")
@@ -36,7 +37,15 @@ def filter_kor(content):
 
 df['kor_nouns'] = df['content'].apply(lambda x: filter_kor(x))
 
-df.to_excel(path + "\clean_data.xlsx", engine="openpyxl")
+print(df['content'])
+
+joining = ' '.join(df['content'])
+noun = filter_kor(joining)
+# print(joining)
+# print(Counter(noun).most_common(15))
+# print(len(noun))
+
+df.to_json(path + "\clean_data.json")
 
 
 
