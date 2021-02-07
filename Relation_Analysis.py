@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-from konlpy.tag  import Okt
+from konlpy.tag import Okt
 from apyori import apriori
 import time
 import datetime
@@ -25,7 +25,7 @@ results = list(apriori(transactions,
               min_lift=5,
               max_length=2)
               )
-#한 데이터세트 즉 하나의 행에 해당 단어가 포함되는 확율 = keywords/all columns
+#한 데이터세트 즉 하나의 행에 해당 단어가 포함되는 확율 = keywords/all rows
 
 network_df = pd.DataFrame(columns=['source','target','support'])
 
@@ -37,13 +37,6 @@ for result in results:
 
 print(network_df)
 
-for row in kor_df:
-    noun_list = [row]
-
-nouns_list = []
-
-# clean2_df = pd.read_excel(path + "\clean_data.xlsx", engine="openpyxl")
-#
 # for noun in clean_df['kor_nouns']:
 #     for num in range(len(noun)):
 #         nouns_list.append(noun[num])
