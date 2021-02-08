@@ -12,16 +12,10 @@ samples = [['말', '사자', '판다'],
 
 for sample in samples:
     str_sample = [word for word in sample]
+print(str_sample)
 
 pr = Counter(str_sample)
 print(pr)
-
-another_sample = "아버지 가방에 들어가시신다"
-
-tagger = Okt()
-nouns = tagger.nouns(another_sample)
-print(nouns)
-
 
 # apriori_cals = list(apriori(sample))
 #
