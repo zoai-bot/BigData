@@ -32,8 +32,8 @@ support_df = kor_df['kor_content'].apply(lambda x: filter_kor_noun(x))
 transactions = support_df.tolist()
 
 results = list(apriori(transactions,
-              min_support=(0.05),
-              min_confidence=0.05,
+              min_support=(400/10000),
+              min_confidence=0.1,
               min_lift=1.1,
               max_length=2)
               )
@@ -56,7 +56,7 @@ node_count = Counter(filtered_kor)
 
 node_df = pd.DataFrame(node_count.items(), columns=['node','nodesize'])
 
-node_df = node_df[node_df['nodesize']>=50]
+node_df = node_df[node_df['nodesize']>=40]
 print(node_df.shape)
 node_df.to_excel(path+"/data/node_df.xlsx", engine="openpyxl", index=False)
 
@@ -71,13 +71,15 @@ for index, row in node_df.iterrows():
     graph.add_node(row['node'], nodesize=row['nodesize'])
 
 print("node: {}".format( [graph.nodes[node]['nodesize'] for node in graph] ) )
+#노드 50이상의 값으로 노드(단어) 수 제한
 
 for index, row in network_df.iterrows():
     graph.add_weighted_edges_from([(row['source'], row['target'], row ['support'])])
 
 print("weight: {}".format( [graph.nodes[node] for node in graph] ) )
+#제한된 노드(단어) 수보다 많은 단어 검출되면 에러
 
-pos = nx.spring_layout(graph, k=0.6, iterations=50)
+pos = nx.spring_layout(graph, k=0.8, iterations=50)
 sizes = [graph.nodes[node]['nodesize']*25 for node in graph]
 nx.draw(graph, pos=pos, node_size=sizes)
 
@@ -85,8 +87,7 @@ nx.draw_networkx_labels(graph, pos=pos, font_family='gulim', font_size=25)
 
 ax = plt.gca()
 print(ax)
-if network_df is not None:
-    plt.show()
+plt.show()
 
 
 
