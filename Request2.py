@@ -2,10 +2,6 @@ import requests, bs4
 import pandas as pd
 import urllib.request
 import os
-import xmltodict
-import json
-from urllib.request import Request, urlopen
-from urllib.parse import urlencode, quote_plus, unquote
 
 url = 'http://openapi.data.go.kr/openapi/service/rest/Covid19/getCovid19InfStateJson'
 
@@ -21,30 +17,31 @@ params = (
 
 open_url = url + params
 print(open_url)
+
 response = urllib.request.urlopen(open_url)
 check = requests.get(open_url)
-print(check)
-response_data = response.read()
 
-soup = bs4.BeautifulSoup(check.content, 'lxml')
+if check.status_code == 200:
+    response_data = response.read()
+    soup = bs4.BeautifulSoup(response_data, 'lxml')
+    items = soup.find_all("item")
 
-items = soup.find_all("item")
+    data = []
+    for item in items:
+        carecnt = item.find("carecnt").text
+        clearcnt = item.find("clearcnt").text
+        deathcnt = item.find("deathcnt").text
+        decidecnt = item.find("decidecnt").text
+        examcnt = item.find("examcnt").text
+        resutlnegcnt = item.find("resutlnegcnt").text
+        statedt = item.find("statedt").text
+        row = [statedt, carecnt, clearcnt, deathcnt, decidecnt, examcnt,resutlnegcnt]
+        data.append(row)
 
-data = []
-for item in items:
-    carecnt = item.find("carecnt").text
-    print(carecnt)
-    clearcnt = item.find("clearcnt").text
-    deathcnt = item.find("deathcnt").text
-    decidecnt = item.find("decidecnt").text
-    examcnt = item.find("examcnt").text
-    resutlnegcnt = item.find("resutlnegcnt").text
-    statedt = item.find("statedt").text
-    row = [statedt, carecnt, clearcnt, deathcnt, decidecnt, examcnt,resutlnegcnt]
-    data.append(row)
-
-columns = ['기준일','치료중환자수','격리해제수','사망자수','확진자수','검사진행수','결과음성수']
-Corona_data = pd.DataFrame(data=data, columns=columns)
+    columns = ['기준일','치료중환자수','격리해제수','사망자수','확진자수','검사진행수','결과음성수']
+    Corona_data = pd.DataFrame(data=data, columns=columns)
+else:
+    print("error")
 
 path = os.getcwd()
 Corona_data.to_excel(path + "/data/Corona20200401_20210115.xlsx", engine='openpyxl', index=None)

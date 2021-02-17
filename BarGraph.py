@@ -6,7 +6,6 @@ path = os.getcwd()
 
 eco_file = path + "\ECOS_TABLE_20210118_154159.xlsx"
 corona_file = path +"/101_DT_COVID19_005_D_20210118235058.xlsx"
-pd_economic = pd.DataFrame()
 
 #2020년4월 1일부터 2021년 1월15일 data
 ex_eco = pd.read_excel(eco_file, engine='openpyxl')
