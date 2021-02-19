@@ -4,35 +4,35 @@ import os
 
 path = os.getcwd()
 
-eco_file = path + "\ECOS_TABLE_20210118_154159.xlsx"
-corona_file = path +"/101_DT_COVID19_005_D_20210118235058.xlsx"
+eco_file = path + "/data/ECOS_TABLE_20210118_154159.xlsx"
+corona_file = path +"/data/101_DT_COVID19_005_D_20210118235058.xlsx"
 
 #2020년4월 1일부터 2021년 1월15일 data
-ex_eco = pd.read_excel(eco_file, engine='openpyxl')
-dates = np.array(ex_eco.columns[66:])
+pd_eco = pd.read_excel(eco_file, engine='openpyxl')
+dates = np.array(pd_eco.columns[66:])
 df_kospi = pd.DataFrame(data=dates, columns=['Date'])
-kospi_value = np.array(ex_eco.loc[0])
+kospi_value = np.array(pd_eco.loc[0])
 kospi_value = kospi_value[66:]
 
 df_kospi['Kospi'] = kospi_value
 
-ex_corona = pd.read_excel(corona_file, engine='openpyxl')
-corona_dates = np.array(ex_corona.iloc[0])[4:]
+pd_corona = pd.read_excel(corona_file, engine='openpyxl')
+corona_dates = np.array(pd_corona.iloc[0])[4:]
 corona_date = []
 for each in corona_dates:
     string = each.replace(". ", "/")
     corona_date.append(string)
 
 df_corona = pd.DataFrame(data=corona_date, columns=['Date'])
-corona_value = np.array(ex_corona.iloc[3])
+corona_value = np.array(pd_corona.iloc[3])
 corona_value = corona_value[4:]
 df_corona['Coronic'] = corona_value
 
 df = pd.merge(df_corona, df_kospi, left_on='Date', right_on='Date', how='outer')
 
-df.to_excel(path+"\kospi_corona.xlsx", index=False, engine='openpyxl')
+df.to_excel(path+"/data/kospi_corona.xlsx", index=False, engine='openpyxl')
 
-df = pd.read_excel(path+"\kospi_corona.xlsx", engine='openpyxl')
+df = pd.read_excel(path+"/data/kospi_corona.xlsx", engine='openpyxl')
 
 d = df.dropna()
 
